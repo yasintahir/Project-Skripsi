@@ -1,0 +1,9 @@
+E:\kari\yasin\penjadwalan\penjadwalan\bin\Debug\penjadwalan.exe.config
+E:\kari\yasin\penjadwalan\penjadwalan\obj\Debug\penjadwalan.csprojResolveAssemblyReference.cache
+E:\kari\yasin\penjadwalan\penjadwalan\obj\Debug\penjadwalan.Form1.resources
+E:\kari\yasin\penjadwalan\penjadwalan\obj\Debug\penjadwalan.Properties.Resources.resources
+E:\kari\yasin\penjadwalan\penjadwalan\obj\Debug\penjadwalan.csproj.GenerateResource.Cache
+E:\kari\yasin\penjadwalan\penjadwalan\bin\Debug\penjadwalan.exe
+E:\kari\yasin\penjadwalan\penjadwalan\bin\Debug\penjadwalan.pdb
+E:\kari\yasin\penjadwalan\penjadwalan\obj\Debug\penjadwalan.exe
+E:\kari\yasin\penjadwalan\penjadwalan\obj\Debug\penjadwalan.pdb
