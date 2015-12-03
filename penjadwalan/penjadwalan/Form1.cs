@@ -17,10 +17,12 @@ namespace penjadwalan
         private kon sql = new kon();
         public GLobalSolusi GlobalJadwal= new GLobalSolusi();
         public Dispatch dom_solusi = new Dispatch();
+        public movns optimasi = new movns();
         public Form1()
         {
             InitializeComponent();
             init_golobal_solusi();
+            optimasi.interchanging(GlobalJadwal.GlobalSolusi[1]);
             dataGridView1.DataSource = sql.data_mengajar(1,1,"10 AGRO A","desc").DefaultView;
             
         }
@@ -86,7 +88,7 @@ namespace penjadwalan
             GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Kimia Industri", Kelas = "10 KI B", Tingkat = 1, Visit = false }));
 
 
-            GlobalJadwal.GlobalSolusi[0].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[0].Solusi, sql.data_mengajar(3, 1, "12 AGRO A", "RAND()"));
+            GlobalJadwal.GlobalSolusi[0].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[0].Solusi, sql.data_mengajar(3, 1, "12 AGRO A", "rand()"));
             GlobalJadwal.GlobalSolusi[1].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[1].Solusi, sql.data_mengajar(3, 1, "12 AGRO B", "rand()"));
             GlobalJadwal.GlobalSolusi[2].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[2].Solusi, sql.data_mengajar(2, 1, "11 AGRO A", "rand()"));
             GlobalJadwal.GlobalSolusi[3].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[3].Solusi, sql.data_mengajar(2, 1, "11 AGRO B", "rand()"));
