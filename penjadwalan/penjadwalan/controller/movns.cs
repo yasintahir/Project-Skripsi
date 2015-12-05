@@ -40,25 +40,35 @@ namespace penjadwalan.controller
             int xx = rg.Next(0, global.Solusi[x].Mengajar.Count - 1);
             int yy = rg.Next(0, global.Solusi[y].Mengajar.Count - 1);
             mengajar temp = new mengajar();
-            temp = global.Solusi[x].Mengajar[xx];
-            global.Solusi[x].Mengajar[xx] = global.Solusi[y].Mengajar[yy];
-            global.Solusi[y].Mengajar[yy] = temp;
+            temp = global.Solusi.ElementAt(x).Mengajar.ElementAt(xx);
+            global.Solusi.ElementAt(x).Mengajar.ElementAt(xx).EndMengajar = global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).EndMengajar;
+            global.Solusi.ElementAt(x).Mengajar.ElementAt(xx).Guru = global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).Guru;
+            global.Solusi.ElementAt(x).Mengajar.ElementAt(xx).MataPelajaran = global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).MataPelajaran;
+            global.Solusi.ElementAt(x).Mengajar.ElementAt(xx).Problem = global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).Problem;
+            global.Solusi.ElementAt(x).Mengajar.ElementAt(xx).Sks = global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).Sks;
+            global.Solusi.ElementAt(x).Mengajar.ElementAt(xx).StartMengajar = global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).StartMengajar;
+            global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).EndMengajar = temp.EndMengajar;
+            global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).Guru = temp.Guru;
+            global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).MataPelajaran = temp.MataPelajaran;
+            global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).Problem = temp.Problem;
+            global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).Sks = temp.Sks;
+            global.Solusi.ElementAt(y).Mengajar.ElementAt(yy).StartMengajar = temp.StartMengajar;
             int jam = atur_jam_mengajar(x);
             for (int i = 0; i < global.Solusi[x].Mengajar.Count; i++)
             {
-                global.Solusi[x].Mengajar[i].StartMengajar = jam;
-                jam = jam + global.Solusi[x].Mengajar[i].Sks;
-                global.Solusi[x].Mengajar[i].EndMengajar = jam - 1;
-                xlimit -= global.Solusi[x].Mengajar[i].Sks;
+                global.Solusi.ElementAt(x).Mengajar.ElementAt(i).StartMengajar = jam;
+                jam = jam + global.Solusi.ElementAt(x).Mengajar.ElementAt(i).Sks;
+                global.Solusi.ElementAt(x).Mengajar.ElementAt(i).EndMengajar = jam - 1;
+                xlimit -= global.Solusi.ElementAt(x).Mengajar.ElementAt(i).Sks;
             }
             global.Solusi[x].Limit = xlimit;
             jam = atur_jam_mengajar(y);
             for (int i = 0; i < global.Solusi[y].Mengajar.Count; i++)
             {
-                global.Solusi[y].Mengajar[i].StartMengajar = jam;
-                jam = jam + global.Solusi[y].Mengajar[i].Sks;
-                global.Solusi[y].Mengajar[i].EndMengajar = jam - 1;
-                ylimit -= global.Solusi[y].Mengajar[i].Sks;
+                global.Solusi.ElementAt(y).Mengajar.ElementAt(i).StartMengajar = jam;
+                jam = jam + global.Solusi.ElementAt(y).Mengajar.ElementAt(i).Sks;
+                global.Solusi.ElementAt(y).Mengajar.ElementAt(i).EndMengajar = jam - 1;
+                ylimit -= global.Solusi.ElementAt(y).Mengajar.ElementAt(i).Sks;
             }
             global.Solusi[y].Limit = ylimit;
                 return global;
@@ -141,7 +151,7 @@ namespace penjadwalan.controller
                     {
                         if (GLobalJadwal.GlobalSolusi[i].Solusi[j].Mengajar.Count - 1 > k)
                         {
-                            if (GLobalJadwal.GlobalSolusi[i].Solusi[j].Mengajar[k].Guru == GLobalJadwal.GlobalSolusi[pos].Solusi[j].Mengajar[k].Guru)
+                            if (GLobalJadwal.GlobalSolusi[i].Solusi[j].Mengajar.ElementAt(k).Guru == GLobalJadwal.GlobalSolusi[pos].Solusi[j].Mengajar.ElementAt(k).Guru)
                             {
                                 pinalti++;
                             }
@@ -159,9 +169,9 @@ namespace penjadwalan.controller
                     {
                         for (int l = 0; l < GLobalJadwal.GlobalSolusi[k].Solusi[i].Mengajar.Count; l++)
                         {
-                            if (GLobalJadwal.GlobalSolusi[pos].Solusi[i].Mengajar[j].Guru == GLobalJadwal.GlobalSolusi[k].Solusi[i].Mengajar[l].Guru)
+                            if (GLobalJadwal.GlobalSolusi[pos].Solusi[i].Mengajar.ElementAt(j).Guru == GLobalJadwal.GlobalSolusi[k].Solusi[i].Mengajar.ElementAt(l).Guru)
                             {
-                                if (Math.Abs(GLobalJadwal.GlobalSolusi[pos].Solusi[i].Mengajar[j].StartMengajar - GLobalJadwal.GlobalSolusi[k].Solusi[i].Mengajar[l].StartMengajar) <= GLobalJadwal.GlobalSolusi[pos].Solusi[i].Mengajar[j].Sks)
+                                if (Math.Abs(GLobalJadwal.GlobalSolusi[pos].Solusi[i].Mengajar.ElementAt(j).StartMengajar - GLobalJadwal.GlobalSolusi[k].Solusi[i].Mengajar.ElementAt(l).StartMengajar) <= GLobalJadwal.GlobalSolusi[pos].Solusi[i].Mengajar.ElementAt(j).Sks)
                                 {
                                     pinalti++;
                                 }
@@ -174,28 +184,83 @@ namespace penjadwalan.controller
                 return pinalti;
         }
 
-        public List<int> insertion(solusi jadwal)
+        public solusi insertion(solusi jadwal)
         {
+            // flag tanda buat intesification
             int random = 0;
-            List<int> x = new List<int>();
-            for(int i = 0; i < jadwal.Solusi.Count){
-                    random = rr.Next(0, jadwal.Solusi[i].Mengajar.Count-1);
-                x.Add(random);
+            for (int i = 0; i < jadwal.Solusi.Count;i++)
+            {
+                random = rr.Next(0, jadwal.Solusi[i].Mengajar.Count - 1);
+                jadwal.Solusi[i].Mengajar.ElementAt(random).Problem = true;
             }
-            return x;
+            return jadwal;
         }
 
         public List<solusi> intensification(solusi jadwal)
         {
-            List<solusi> x;
-            List<solusi> temp;
-            solusi temp_jadwal = jadwal;
-            List<int> job = insertion(jadwal);
-            for (int i = 0; i < temp_jadwal.Solusi.Count; i++)
+            //pindah mengajar yang ditandain
+            List<solusi> temp_jadwal = new List<solusi>();
+            List<solusi> temp_job = new List<solusi>();
+            List<mengajar> job = new List<mengajar>();
+            LinkedListNode<mengajar> lln;
+            for (int i = 0; i < jadwal.Solusi.Count; i++)
             {
-               //intensification macet
+                for (int j = 0; j < jadwal.Solusi[i].Mengajar.Count; j++)
+                {
+                    if (jadwal.Solusi[i].Mengajar.ElementAt(j).Problem)
+                    {
+                        //lln = new LinkedListNode<mengajar>(jadwal.Solusi[i].Mengajar.ElementAt(j));
+                        job.Add(jadwal.Solusi[i].Mengajar.ElementAt(j));
+                        jadwal.Solusi[i].Mengajar.Remove(jadwal.Solusi[i].Mengajar.ElementAt(j));
+                        lln = null;
+                    }
+                }
             }
-                return x;
+            //end pisah ngajar
+            temp_jadwal.Add(new solusi() {  Jurusan = jadwal.Jurusan, Kelas = jadwal.Kelas, Solusi = jadwal.Solusi, Tingkat = jadwal.Tingkat, Visit = jadwal.Visit});
+            // masukin ke tetangga
+            for (int i = 0; i < job.Count; i++) // iterasi sebanyak job
+            {
+                for (int j = 0; j < temp_jadwal.Count; j++)// iterasi per solusi yang fitness di lokal
+                {
+                    for (int k = 0; k <jadwal.Solusi.Count; k++) // iterasi per hari
+                    {
+                        for (int l = 0; l <= jadwal.Solusi[k].Mengajar.Count; l++)// iterasi mengajar per hari
+                        {
+                            temp_job.Add(temp_jadwal[j]);
+                            temp_job.Last().Solusi[k].Mengajar.Insert(l,job[i]);
+                        }
+                        
+                    }
+                }
+
+                for (int m = 0; m < temp_job.Count; m++)//periksa lokal fitness temp_job
+                {
+                    if (local_pinalti(temp_job[m]) > 0)
+                    {
+                        temp_job.RemoveAt(m);
+                    }
+                }
+                temp_jadwal.Clear();
+                temp_jadwal.AddRange(temp_job);
+                temp_job.Clear();
+            }
+            //end tetangga
+
+            for (int i = 0; i < temp_jadwal.Count; i++)
+            {
+                for (int j = 0; j < temp_jadwal[i].Solusi.Count; j++)
+                {
+                    for (int k = 0; k < temp_jadwal[i].Solusi[j].Mengajar.Count; k++)
+                    {
+                        if (temp_jadwal[i].Solusi[j].Mengajar.ElementAt(k).Problem)
+                        {
+                            temp_jadwal[i].Solusi[j].Mengajar.ElementAt(k).Problem = false;
+                        }
+                    }
+                }
+            }
+                return temp_jadwal;
         }
     }
 }

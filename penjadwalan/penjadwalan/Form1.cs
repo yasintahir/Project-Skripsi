@@ -19,17 +19,19 @@ namespace penjadwalan
         public Dispatch dom_solusi = new Dispatch();
         public movns optimasi = new movns();
         public int LokalPinalti,GlobalPinalti;
+        public solusi TempIntesifcate = new solusi();
+        public List<solusi> KandidatSolusiBaru = new List<solusi>();
         public Form1()
         {
             InitializeComponent();
             init_golobal_solusi();
             LokalPinalti = optimasi.local_pinalti(GlobalJadwal.GlobalSolusi[0]);
-            while (LokalPinalti > 0)
-            {
-                GlobalJadwal.GlobalSolusi[0] =  optimasi.interchanging(GlobalJadwal.GlobalSolusi[0]);
-                LokalPinalti = optimasi.local_pinalti(GlobalJadwal.GlobalSolusi[0]);
-                MessageBox.Show(LokalPinalti.ToString());
-            }
+            GlobalJadwal.GlobalSolusi[0] =  optimasi.interchanging(GlobalJadwal.GlobalSolusi[0]);
+            GlobalJadwal.GlobalSolusi[0] = optimasi.insertion(GlobalJadwal.GlobalSolusi[0]);
+            TempIntesifcate = GlobalJadwal.GlobalSolusi[0];
+            KandidatSolusiBaru.AddRange(optimasi.intensification(TempIntesifcate));
+            //LokalPinalti = optimasi.local_pinalti(GlobalJadwal.GlobalSolusi[0]);
+            //MessageBox.Show(LokalPinalti.ToString());
             dataGridView1.DataSource = sql.data_mengajar(1,1,"10 AGRO A","desc").DefaultView;
             
         }
