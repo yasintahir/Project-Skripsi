@@ -18,18 +18,11 @@ namespace penjadwalan
         public GLobalSolusi GlobalJadwal= new GLobalSolusi();
         public Dispatch dom_solusi = new Dispatch();
         public movns optimasi = new movns();
-        public int LokalPinalti,GlobalPinalti;
         public Form1()
         {
             InitializeComponent();
             init_golobal_solusi();
-            LokalPinalti = optimasi.local_pinalti(GlobalJadwal.GlobalSolusi[0]);
-            while (LokalPinalti > 0)
-            {
-                GlobalJadwal.GlobalSolusi[0] =  optimasi.interchanging(GlobalJadwal.GlobalSolusi[0]);
-                LokalPinalti = optimasi.local_pinalti(GlobalJadwal.GlobalSolusi[0]);
-                MessageBox.Show(LokalPinalti.ToString());
-            }
+            MessageBox.Show(optimasi.local_pinalti(GlobalJadwal.GlobalSolusi[0]).ToString());
             dataGridView1.DataSource = sql.data_mengajar(1,1,"10 AGRO A","desc").DefaultView;
             
         }
