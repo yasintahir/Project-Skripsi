@@ -230,9 +230,8 @@ namespace penjadwalan.controller
                         {
                             List<jadwal> x = temp_jadwal[j].Solusi.ToList();
                             temp_job.Add(new solusi() { Jurusan = temp_jadwal[j].Jurusan, Kelas = temp_jadwal[j].Kelas, Solusi = x, Tingkat = temp_jadwal[j].Tingkat, Visit = temp_jadwal[j].Visit});
-                            List<mengajar> temp_ajar = temp_job.Last().Solusi[k].Mengajar;
-                            temp_job.Last().Solusi[k].Mengajar.Clear();
-                         }
+                            temp_job.Last().Solusi[k].Mengajar.Insert(l, job[i]);
+                        }
                         
                     }
                 }
