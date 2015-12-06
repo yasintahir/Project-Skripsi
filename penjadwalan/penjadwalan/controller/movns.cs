@@ -1,6 +1,7 @@
 ﻿using penjadwalan.model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -217,7 +218,7 @@ namespace penjadwalan.controller
                 }
             }
             //end pisah ngajar
-            temp_jadwal.Add(new solusi() {  Jurusan = jadwal.Jurusan, Kelas = jadwal.Kelas, Solusi = jadwal.Solusi, Tingkat = jadwal.Tingkat, Visit = jadwal.Visit});
+            temp_jadwal.Add(jadwal);
             // masukin ke tetangga
             for (int i = 0; i < job.Count; i++) // iterasi sebanyak job
             {
@@ -227,9 +228,11 @@ namespace penjadwalan.controller
                     {
                         for (int l = 0; l <= jadwal.Solusi[k].Mengajar.Count; l++)// iterasi mengajar per hari
                         {
-                            temp_job.Add(temp_jadwal[j]);
-                            temp_job.Last().Solusi[k].Mengajar.Insert(l,job[i]);
-                        }
+                            List<jadwal> x = temp_jadwal[j].Solusi.ToList();
+                            temp_job.Add(new solusi() { Jurusan = temp_jadwal[j].Jurusan, Kelas = temp_jadwal[j].Kelas, Solusi = x, Tingkat = temp_jadwal[j].Tingkat, Visit = temp_jadwal[j].Visit});
+                            List<mengajar> temp_ajar = temp_job.Last().Solusi[k].Mengajar;
+                            temp_job.Last().Solusi[k].Mengajar.Clear();
+                         }
                         
                     }
                 }
