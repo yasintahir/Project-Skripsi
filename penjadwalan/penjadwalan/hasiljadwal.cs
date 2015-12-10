@@ -127,7 +127,7 @@ namespace penjadwalan
                     int CounterPel = 0;
                     while (CounterPel < ajar[i].Mengajar[j].Sks)
                     {
-                        if (lim == 4 || lim == 6)
+                        if (lim == 4 || lim == 7)
                         {
                             DataRow row = tabel.NewRow();
                             row["jam"] = jam[lim];
