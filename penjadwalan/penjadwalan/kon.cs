@@ -62,7 +62,7 @@ namespace penjadwalan
        public DataTable data_mengajar(int tingkat, int jurusan, string kelas, string order)
        {
            DataTable mengajar = new DataTable();
-           String sql = "select guru.nama_guru,mata_pelajaran.mata_pelajaran, detail_mtp.sks, tingkat.tingkat, jurusan.kode_jurusan, kelas.kelas  from detail_mengajar join detail_mtp on detail_mengajar.kode_mtp = detail_mtp.id_dmp join kelas on detail_mengajar.id_kelas = kelas.id_kelas join guru on detail_mengajar.kode_guru = guru.kode_guru join tingkat on detail_mtp.tingkat = tingkat.kode_tingkat join mata_pelajaran on detail_mtp.mata_pelajaran = mata_pelajaran.kode_mtp join jurusan on detail_mtp.jurusan = jurusan.id_jurusan where tingkat.kode_tingkat = "+tingkat+" and jurusan.id_jurusan = "+jurusan+" and kelas.kelas = '"+kelas+"' order  by "+order;
+           String sql = "select guru.nama_guru,mata_pelajaran.mata_pelajaran, detail_mtp.sks, tingkat.tingkat, jurusan.kode_jurusan, kelas.kelas  from detail_mengajar join detail_mtp on detail_mengajar.kode_mtp = detail_mtp.id_dmp join kelas on detail_mengajar.id_kelas = kelas.id_kelas join guru on detail_mengajar.kode_guru = guru.kode_guru join tingkat on detail_mtp.tingkat = tingkat.kode_tingkat join mata_pelajaran on detail_mtp.mata_pelajaran = mata_pelajaran.kode_mtp join jurusan on detail_mtp.jurusan = jurusan.id_jurusan where tingkat.kode_tingkat = "+tingkat+" and jurusan.id_jurusan = "+jurusan+" and kelas.kelas = '"+kelas+"' order  by NEWID()";
            mengajar = tampil_data(sql);
            return mengajar;
        }
