@@ -16,3 +16,4 @@ E:\kari\yasin\Project-Skripsi\penjadwalan\penjadwalan\obj\Debug\penjadwalan.cspr
 E:\kari\yasin\Project-Skripsi\penjadwalan\penjadwalan\obj\Debug\penjadwalan.Form1.resources
 E:\kari\yasin\Project-Skripsi\penjadwalan\penjadwalan\obj\Debug\penjadwalan.Properties.Resources.resources
 E:\kari\yasin\Project-Skripsi\penjadwalan\penjadwalan\obj\Debug\penjadwalan.csproj.GenerateResource.Cache
+E:\kari\yasin\Project-Skripsi\penjadwalan\penjadwalan\obj\Debug\penjadwalan.exe.licenses

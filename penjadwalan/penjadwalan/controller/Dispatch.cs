@@ -17,7 +17,7 @@ namespace penjadwalan.controller
             x.Solusi.Add(new jadwal() { Limit = 10, Hari = "selasa"});
             x.Solusi.Add(new jadwal() { Limit = 10, Hari = "rabu"});
             x.Solusi.Add(new jadwal() { Limit = 10, Hari = "kamis"});
-            x.Solusi.Add(new jadwal() { Limit = 7, Hari = "Jumat"});
+            x.Solusi.Add(new jadwal() { Limit = 9, Hari = "Jumat"});
             x.Solusi.Add(new jadwal() { Limit = 10, Hari = "sabtu"});
             return x;
         }
@@ -29,7 +29,7 @@ namespace penjadwalan.controller
             int temp_sks = 0;
             int i = 0;
             int limit_loop = 0;
-            int[] jam_ngajar = new int[6] { 2, 1, 1, 1, 3, 1 };
+            int[] jam_ngajar = new int[6] { 2, 1, 1, 1, 2, 1 };
             int start_ngajar = 0;
             while (!optim)
             {
@@ -43,14 +43,10 @@ namespace penjadwalan.controller
                         start_ngajar = jam_ngajar[hari];
                         jam_ngajar[hari] += temp_sks;
                         x[hari].Mengajar.Add(new mengajar() { Guru = y.Rows[i].ItemArray[0].ToString(), MataPelajaran = y.Rows[i].ItemArray[1].ToString(), Sks = temp_sks , Problem=false , StartMengajar = start_ngajar, EndMengajar = jam_ngajar[hari]-1});
-                        
+                        hari++;
                         i++;
                     }
-                    else
-                    {
-                        hari++;//ke hari berikutnya
-                    }
-
+                   
                     if (!optim && hari > 5)
                     {
                         hari = 0;
