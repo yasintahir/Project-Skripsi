@@ -107,11 +107,10 @@
             // GlobalErrorLbl
             // 
             this.GlobalErrorLbl.AutoSize = true;
-            this.GlobalErrorLbl.Location = new System.Drawing.Point(9, 292);
+            this.GlobalErrorLbl.Location = new System.Drawing.Point(13, 306);
             this.GlobalErrorLbl.Name = "GlobalErrorLbl";
-            this.GlobalErrorLbl.Size = new System.Drawing.Size(17, 13);
+            this.GlobalErrorLbl.Size = new System.Drawing.Size(0, 13);
             this.GlobalErrorLbl.TabIndex = 6;
-            this.GlobalErrorLbl.Text = "xx";
             // 
             // Form1
             // 

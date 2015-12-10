@@ -57,6 +57,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="hasiljadwal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="hasiljadwal.Designer.cs">
+      <DependentUpon>hasiljadwal.cs</DependentUpon>
+    </Compile>
     <Compile Include="kon.cs" />
     <Compile Include="model\jadwal.cs" />
     <Compile Include="model\mengajar.cs" />
@@ -65,6 +71,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="hasiljadwal.resx">
+      <DependentUpon>hasiljadwal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">

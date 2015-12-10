@@ -22,6 +22,9 @@ namespace penjadwalan
         public int LokalPinalti,GlobalPinalti;
         public solusi TempIntesifcate = new solusi();
         private Thread AlgoThread;
+        public DataTable Log = new DataTable();
+        public DataRow Row;
+        private bool op = false;
         public Form1()
         {
 
@@ -29,6 +32,8 @@ namespace penjadwalan
             optimasi = new movns(this);
             initUI();
             init_golobal_solusi();
+            Log.Columns.Add(new DataColumn() { ColumnName = "Status" });
+            Log.Columns.Add(new DataColumn() { ColumnName = "Keterangan" });
            // MessageBox.Show(GlobalJadwal.GlobalSolusi[10].Solusi.Count().ToString());
         }
 
@@ -49,10 +54,18 @@ namespace penjadwalan
                 int shuffle = 0;
                 while (done < GlobalJadwal.GlobalSolusi.Count)
                 {
+                    Row = Log.NewRow(); Row["Status"] = "Waktu"; Row["Keterangan"] = "Cek Penalti";
+                    Log.Rows.Add(Row);
                     LokalPinalti = optimasi.local_pinalti(GlobalJadwal.GlobalSolusi[done]);
+                    Row = Log.NewRow();Row["Status"]="Lokal Penalti";Row["Keterangan"]="Lokal Penalti : "+LokalPinalti;
+                    Log.Rows.Add(Row);
                     GlobalPinalti = optimasi.global_pinalti(GlobalJadwal, done);
+                    Row = Log.NewRow(); Row["Status"] = "Global Penalti"; Row["Keterangan"] = "Global Penalti : " + GlobalPinalti;
+                    Log.Rows.Add(Row);
                     if (GlobalPinalti == 0 && LokalPinalti == 0)
                     {
+                        Row = Log.NewRow(); Row["Status"] = "Optimal"; Row["Keterangan"] = "Kelas : " + GlobalJadwal.GlobalSolusi[done].Kelas;
+                        Log.Rows.Add(Row);
                         done++;
                         double x = (done * 1.00 / GlobalJadwal.GlobalSolusi.Count * 1.00) * 100.00;
                         x = Math.Floor(x);
@@ -62,14 +75,28 @@ namespace penjadwalan
                     }
                     else
                     {
+                        Row = Log.NewRow(); Row["Status"] = "Proses"; Row["Keterangan"] = "Interchanging";
+                        Log.Rows.Add(Row);
                         GlobalJadwal = optimasi.interchanging(GlobalJadwal, done);
+                        Row = Log.NewRow(); Row["Status"] = "Waktu"; Row["Keterangan"] = "Cek Penalti";
+                        Log.Rows.Add(Row);
                         LokalPinalti = optimasi.local_pinalti(GlobalJadwal.GlobalSolusi[done]);
+                        Row = Log.NewRow(); Row["Status"] = "Lokal Penalti"; Row["Keterangan"] = "Lokal Penalti : " + LokalPinalti;
+                        Log.Rows.Add(Row);
                         GlobalPinalti = optimasi.global_pinalti(GlobalJadwal, done);
+                        Row = Log.NewRow(); Row["Status"] = "Global Penalti"; Row["Keterangan"] = "Global Penalti : " + GlobalPinalti;
+                        Log.Rows.Add(Row);
                         if (GlobalPinalti > 0 || LokalPinalti > 0)
                         {
+                            Row = Log.NewRow(); Row["Status"] = "Proses"; Row["Keterangan"] = "Insertion";
+                            Log.Rows.Add(Row);
                             GlobalJadwal.GlobalSolusi[done] = optimasi.insertion(GlobalJadwal.GlobalSolusi[done]);
-                            GlobalJadwal = optimasi.intensifikasi(GlobalJadwal, done);
-                            shuffle++;
+                            
+                                Row = Log.NewRow(); Row["Status"] = "Proses"; Row["Keterangan"] = "Intensifikasi";
+                                Log.Rows.Add(Row);
+                                GlobalJadwal = optimasi.intensifikasi(GlobalJadwal, done);
+                                shuffle++;
+                            
                         }
                         else
                         {
@@ -87,23 +114,40 @@ namespace penjadwalan
                         ErrorLbl.Invoke((MethodInvoker)(() => ErrorLbl.Text = GlobalJadwal.GlobalSolusi[done].Kelas + " Lokal Penalti: " + LokalPinalti.ToString()));
                         GlobalErrorLbl.Invoke((MethodInvoker)(() => GlobalErrorLbl.Text = GlobalJadwal.GlobalSolusi[done].Kelas + " Global Penalti: " + GlobalPinalti.ToString() + done.ToString()));
                     }
-                    if (shuffle > 100)
+                    if (shuffle > 500)
                     {
-                        done -= 1;
+                        if (shuffle < 3 && done > 0)
+                        {
+                            done -= 1;
+                        }
+                        else if (done >= 3)
+                        {
+                            done -= 2;
+                        }
                         double x = (done * 1.00 / GlobalJadwal.GlobalSolusi.Count * 1.00) * 100.00;
                         x = Math.Floor(x);
                         progress_loading.Invoke((MethodInvoker)(() => progress_loading.Text = x + "%"));
                         loading.Invoke((MethodInvoker)(() => loading.Value = int.Parse(x.ToString())));
                         shuffle = 0;
+                        Row = Log.NewRow(); Row["Status"] = "Proses"; Row["Keterangan"] = "Insertion";
+                        Log.Rows.Add(Row);
+                        GlobalJadwal.GlobalSolusi[done] = optimasi.insertion(GlobalJadwal.GlobalSolusi[done]);
+                        Row = Log.NewRow(); Row["Status"] = "Proses"; Row["Keterangan"] = "Intensifikasi";
+                        Log.Rows.Add(Row);
+                        GlobalJadwal = optimasi.intensifikasi(GlobalJadwal, done);
+                        shuffle++;
                     }
 
-                    Thread.Sleep(300);
+                    Thread.Sleep(200);
                 }
             };
             bw.RunWorkerCompleted += (sender, args) =>
             {
 
-                MessageBox.Show("Penysunan telah berhasil");
+                hasiljadwal x = new hasiljadwal(this);
+                op = true;
+                x.Show();
+                this.Close();
             };
 
             bw.RunWorkerAsync();
@@ -173,17 +217,17 @@ namespace penjadwalan
 
             GlobalJadwal.GlobalSolusi[0].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[0].Solusi, sql.data_mengajar(3, 1, "12 AGRO A", "NEWID()"));
             GlobalJadwal.GlobalSolusi[1].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[1].Solusi, sql.data_mengajar(3, 1, "12 AGRO B", "detail_mtp.sks asc"));
-            GlobalJadwal.GlobalSolusi[2].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[2].Solusi, sql.data_mengajar(2, 1, "11 AGRO A", "detail_mtp.sks desc"));
-            GlobalJadwal.GlobalSolusi[3].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[3].Solusi, sql.data_mengajar(2, 1, "11 AGRO B", "detail_mtp.sks asc"));
-            GlobalJadwal.GlobalSolusi[4].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[4].Solusi, sql.data_mengajar(1, 1, "10 AGRO A", "detail_mtp.sks desc"));
+            GlobalJadwal.GlobalSolusi[2].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[2].Solusi, sql.data_mengajar(2, 1, "11 AGRO A", "guru.nama_guru desc"));
+            GlobalJadwal.GlobalSolusi[3].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[3].Solusi, sql.data_mengajar(2, 1, "11 AGRO B", "mata_pelajaran.mata_pelajaran asc"));
+            GlobalJadwal.GlobalSolusi[4].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[4].Solusi, sql.data_mengajar(1, 1, "10 AGRO A", "NEWID()"));
             GlobalJadwal.GlobalSolusi[5].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[5].Solusi, sql.data_mengajar(1, 1, "10 AGRO B", "detail_mtp.sks asc"));
 
-            GlobalJadwal.GlobalSolusi[6].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[6].Solusi, sql.data_mengajar(3, 3, "12 PM A", "detail_mtp.sks desc"));
-            GlobalJadwal.GlobalSolusi[7].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[7].Solusi, sql.data_mengajar(3, 3, "12 PM B", "detail_mtp.sks asc"));
+            GlobalJadwal.GlobalSolusi[6].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[6].Solusi, sql.data_mengajar(3, 3, "12 PM A", "guru.nama_guru desc"));
+            GlobalJadwal.GlobalSolusi[7].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[7].Solusi, sql.data_mengajar(3, 3, "12 PM B", "mata_pelajaran.mata_pelajaran asc"));
             GlobalJadwal.GlobalSolusi[8].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[8].Solusi, sql.data_mengajar(2, 3, "11 PM A", "detail_mtp.sks desc"));
-            GlobalJadwal.GlobalSolusi[9].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[9].Solusi, sql.data_mengajar(2, 3, "11 PM B", "detail_mtp.sks asc"));
-            GlobalJadwal.GlobalSolusi[10].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[10].Solusi, sql.data_mengajar(1, 3, "10 PM A", "detail_mtp.sks desc"));
-            GlobalJadwal.GlobalSolusi[11].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[11].Solusi, sql.data_mengajar(1, 3, "10 PM B", "detail_mtp.sks asc"));
+            GlobalJadwal.GlobalSolusi[9].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[9].Solusi, sql.data_mengajar(2, 3, "11 PM B", "NEWID()"));
+            GlobalJadwal.GlobalSolusi[10].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[10].Solusi, sql.data_mengajar(1, 3, "10 PM A", "guru.nama_guru desc"));
+            GlobalJadwal.GlobalSolusi[11].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[11].Solusi, sql.data_mengajar(1, 3, "10 PM B", "mata_pelajaran.mata_pelajaran asc"));
 
             //GlobalJadwal.GlobalSolusi[12].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[12].Solusi, sql.data_mengajar(3, 5, "12 TKJ A", "detail_mtp.sks desc"));
             //GlobalJadwal.GlobalSolusi[13].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[13].Solusi, sql.data_mengajar(3, 5, "12 TKJ B", "detail_mtp.sks asc"));
@@ -231,20 +275,9 @@ namespace penjadwalan
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            try
+            if (!op)
             {
-                if (AlgoThread != null)
-                {
-                    if (AlgoThread.IsAlive)
-                    {
-                        AlgoThread.Abort();
-                        AlgoThread = null;
-                    }
-                }
-            }
-            catch(ThreadStartException ex)
-            {
-                this.Dispose();
+                Application.Exit();
             }
         }
 

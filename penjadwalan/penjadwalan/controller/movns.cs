@@ -37,7 +37,7 @@ namespace penjadwalan.controller
         /// <returns></returns>
         public GLobalSolusi interchanging( GLobalSolusi global, int pos)
         {
-            if (pos > 0)
+            if (pos >= 0)
             {
                 int x = -1;
                 int xx = -1;
@@ -60,48 +60,63 @@ namespace penjadwalan.controller
                 }
                 if (prob)
                 {
-
-                    int xy = -1;
-                    int xyy = -1;
-                    for (int y = 0; y < global.GlobalSolusi[pos].Solusi.Count; y++)
+                    if (pos > 0)
                     {
-                        int startJam = limit(y);
-                        for (int yy = 0; yy < global.GlobalSolusi[pos].Solusi[y].Mengajar.Count; yy++)
+                        int xy = -1;
+                        int xyy = -1;
+                        for (int y = 0; y < global.GlobalSolusi[pos].Solusi.Count; y++)
                         {
-                            if (global_penalti_intensifikasi(global.GlobalSolusi[pos].Solusi[x].Mengajar[xx], global, pos, y, yy, startJam) == 0)
+                            int startJam = limit(y);
+                            for (int yy = 0; yy < global.GlobalSolusi[pos].Solusi[y].Mengajar.Count; yy++)
                             {
-                                if (Lokal_penalti_intensifikasi(global.GlobalSolusi[pos].Solusi[x].Mengajar[xx], global.GlobalSolusi[pos], pos, y) == 0)
+                                if (global_penalti_intensifikasi(global.GlobalSolusi[pos].Solusi[x].Mengajar[xx], global, pos, y, yy, startJam) == 0)
                                 {
+                                    if (Lokal_penalti_intensifikasi(global.GlobalSolusi[pos].Solusi[x].Mengajar[xx], global.GlobalSolusi[pos], pos, y) == 0)
+                                    {
+                                        xy = y;
+                                        xyy = yy;
+                                    }
+                                }
+                                startJam += global.GlobalSolusi[pos].Solusi[y].Mengajar[yy].Sks;
+                            }
+                        }
+
+                        if (xy >= 0 && xyy >= 0)
+                        {
+                            mengajar temp = new mengajar();
+                            temp = global.GlobalSolusi[pos].Solusi[x].Mengajar[xx];
+                            global.GlobalSolusi[pos].Solusi[x].Mengajar[xx] = global.GlobalSolusi[pos].Solusi[xy].Mengajar[xyy];
+                            global.GlobalSolusi[pos].Solusi[xy].Mengajar[xyy] = temp;
+                            regenerate_jam_mengajar(global.GlobalSolusi[pos]);
+                        }
+                        else
+                        {
+                            form.Row = form.Log.NewRow(); form.Row["Status"] = "Interchanging"; form.Row["Keterangan"] = "Gagal meemukan pasangan optimal, mencari pasangan minimum limit";
+                            form.Log.Rows.Add(form.Row);
+                            int min = 1000;
+                            int trial = 100;
+                            for (int k = 0; k < trial; k++)
+                            {
+                                int y = rr.Next(0, global.GlobalSolusi[pos].Solusi.Count);
+                                int yy = rg.Next(0, global.GlobalSolusi[pos].Solusi[y].Mengajar.Count);
+                                if (min > global_penalti_intensifikasi(global.GlobalSolusi[pos].Solusi[x].Mengajar[xx], global, pos, y, yy, global.GlobalSolusi[pos].Solusi[y].Mengajar[yy].StartMengajar))
+                                {
+                                    min = global_penalti_intensifikasi(global.GlobalSolusi[pos].Solusi[x].Mengajar[xx], global, pos, y, yy, global.GlobalSolusi[pos].Solusi[y].Mengajar[yy].StartMengajar);
                                     xy = y;
                                     xyy = yy;
                                 }
                             }
-                            startJam += global.GlobalSolusi[pos].Solusi[y].Mengajar[yy].Sks;
+                            mengajar temp = new mengajar();
+                            temp = global.GlobalSolusi[pos].Solusi[x].Mengajar[xx];
+                            global.GlobalSolusi[pos].Solusi[x].Mengajar[xx] = global.GlobalSolusi[pos].Solusi[xy].Mengajar[xyy];
+                            global.GlobalSolusi[pos].Solusi[xy].Mengajar[xyy] = temp;
+                            regenerate_jam_mengajar(global.GlobalSolusi[pos]);
                         }
-                    }
-                    if (xy >= 0 && xyy >= 0)
-                    {
-                        mengajar temp = new mengajar();
-                        temp = global.GlobalSolusi[pos].Solusi[x].Mengajar[xx];
-                        global.GlobalSolusi[pos].Solusi[x].Mengajar[xx] = global.GlobalSolusi[pos].Solusi[xy].Mengajar[xyy];
-                        global.GlobalSolusi[pos].Solusi[xy].Mengajar[xyy] = temp;
-                        regenerate_jam_mengajar(global.GlobalSolusi[pos]);
                     }
                     else
                     {
-                        int min = 1000;
-                        int trial = 100;
-                        for (int k = 0; k < trial; k++)
-                        {
-                            int y = rr.Next(0,global.GlobalSolusi[pos].Solusi.Count);
-                            int yy = rg.Next(0,global.GlobalSolusi[pos].Solusi[y].Mengajar.Count);
-                            if (min > global_penalti_intensifikasi(global.GlobalSolusi[pos].Solusi[x].Mengajar[xx], global, pos, y, yy, global.GlobalSolusi[pos].Solusi[y].Mengajar[yy].StartMengajar))
-                            {
-                                min = global_penalti_intensifikasi(global.GlobalSolusi[pos].Solusi[x].Mengajar[xx], global, pos, y, yy, global.GlobalSolusi[pos].Solusi[y].Mengajar[yy].StartMengajar);
-                                xy = y;
-                                xyy = yy;
-                            }
-                        }
+                        int xy = rr.Next(0,global.GlobalSolusi[pos].Solusi.Count);
+                        int xyy = rg.Next(0, global.GlobalSolusi[pos].Solusi[xy].Mengajar.Count);
                         mengajar temp = new mengajar();
                         temp = global.GlobalSolusi[pos].Solusi[x].Mengajar[xx];
                         global.GlobalSolusi[pos].Solusi[x].Mengajar[xx] = global.GlobalSolusi[pos].Solusi[xy].Mengajar[xyy];
@@ -109,6 +124,10 @@ namespace penjadwalan.controller
                         regenerate_jam_mengajar(global.GlobalSolusi[pos]);
                     }
                 }
+
+            }
+            else
+            {
 
             }
             for (int i = 0; i < global.GlobalSolusi[pos].Solusi.Count; i++)
@@ -166,16 +185,22 @@ namespace penjadwalan.controller
                 //cek limit hari yang minus
                 if (jadwal.Solusi[i].Limit < 0)
                 {
+                    form.Row = form.Log.NewRow(); form.Row["Status"] = "Lokal Penalti"; form.Row["Keterangan"] = "Over limit hari";
+                    form.Log.Rows.Add(form.Row);
                     pinalti++;
                 }
                 //cek limit yang kurang dari 5
                 if (jadwal.Solusi[i].Limit > 4)
                 {
+                    form.Row = form.Log.NewRow(); form.Row["Status"] = "Lokal Penalti"; form.Row["Keterangan"] = "sisa Limit masih banyak";
+                    form.Log.Rows.Add(form.Row);
                     pinalti++;
                 }
                 // cek hari mata pelajaran lebih dari 4
                 if (jadwal.Solusi[i].Mengajar.Count > 4)
                 {
+                    form.Row = form.Log.NewRow(); form.Row["Status"] = "Lokal Penalti"; form.Row["Keterangan"] = "Jadwal Mengajar terlalu padat";
+                    form.Log.Rows.Add(form.Row);
                     pinalti++;
                 }
             }
@@ -202,6 +227,8 @@ namespace penjadwalan.controller
                                 if (Math.Abs(GLobalJadwal.GlobalSolusi[pos].Solusi[i].Mengajar.ElementAt(j).StartMengajar - GLobalJadwal.GlobalSolusi[k].Solusi[i].Mengajar.ElementAt(l).StartMengajar) < GLobalJadwal.GlobalSolusi[pos].Solusi[i].Mengajar.ElementAt(j).Sks)
                                 {
                                     GLobalJadwal.GlobalSolusi[pos].Solusi[i].Mengajar[j].Problem = true;
+                                    form.Row = form.Log.NewRow(); form.Row["Status"] = "Global Penalti"; form.Row["Keterangan"] = "Jadwal Mengajar guru bentrok";
+                                    form.Log.Rows.Add(form.Row);
                                     pinalti++;
                                 }
                             }
@@ -229,7 +256,7 @@ namespace penjadwalan.controller
                 }
                 if (jadwal.Solusi[i].Mengajar.Count > 1)
                 {
-                    random = rr.Next(0, jadwal.Solusi[i].Mengajar.Count - 1);
+                    random = rr.Next(0, jadwal.Solusi[i].Mengajar.Count);
                     jadwal.Solusi[i].Mengajar.ElementAt(random).Problem = true;
                 }
                 
@@ -348,6 +375,8 @@ namespace penjadwalan.controller
                     else
                     {
                         //lokal fitt
+                        form.Row = form.Log.NewRow(); form.Row["Status"] = "Intensifikasi"; form.Row["Keterangan"] = "Generate Barnch sebanyak "+counterError+" pada satu job";
+                        form.Log.Rows.Add(form.Row);
                         globaljadwal.GlobalSolusi[pos].Solusi[rand_hari].Mengajar.Insert(rand_ngajar, Job[fin]);
                         int jam = atur_jam_mengajar(rand_hari);
                         int lim = limit(rand_hari);
@@ -365,8 +394,10 @@ namespace penjadwalan.controller
                         counterError = 1;
                     }
 
-                    if (counterError > 500)//0.5 detik belum menemukan keputusan
+                    if (counterError > 300)//0.5 detik belum menemukan keputusan
                     {
+                        form.Row = form.Log.NewRow(); form.Row["Status"] = "Intensifikasi"; form.Row["Keterangan"] = "Jumlah branch melibihi limit melakukan penelusuran fitness";
+                        form.Log.Rows.Add(form.Row);
                         int globalHariMin =-1;
                         int globalngajar = -1;
                         int globalMin=9999;
@@ -395,18 +426,32 @@ namespace penjadwalan.controller
                                     jamStart += globaljadwal.GlobalSolusi[pos].Solusi[i].Mengajar[j].Sks;
                                 }
                             }
-                            if (globalHariMin >= 0 && globalngajar >= 0)
+                            if (pos == 0)
                             {
-                                i = globaljadwal.GlobalSolusi[pos].Solusi.Count;
+                                if (globalHariMin >= 0 || globalngajar >= 0)
+                                {
+                                    i = globaljadwal.GlobalSolusi[pos].Solusi.Count;
+                                }
+                            }
+                            else
+                            {
+                                if (globalHariMin >= 0 && globalngajar >= 0)
+                                {
+                                    i = globaljadwal.GlobalSolusi[pos].Solusi.Count;
+                                }
                             }
                         }
                         if (globalHariMin >= 0 && globalngajar >= 0)
                         {
+                            form.Row = form.Log.NewRow(); form.Row["Status"] = "Intensifikasi"; form.Row["Keterangan"] = "Ketemu branch dengan fitnesh optimal global dan lokal";
+                            form.Log.Rows.Add(form.Row);
                             globaljadwal.GlobalSolusi[pos].Solusi[globalHariMin].Mengajar.Insert(globalngajar, Job[fin]);
                             regenerate_jam_mengajar(globaljadwal.GlobalSolusi[pos]);
                         }
                         else
                         {
+                            form.Row = form.Log.NewRow(); form.Row["Status"] = "Intensifikasi"; form.Row["Keterangan"] = "tidak ketemu fitness lokal dan global, memasuki job ke limit terbesar";
+                            form.Log.Rows.Add(form.Row);
                             int min = 0;
                             for (int i = 1; i < globaljadwal.GlobalSolusi[pos].Solusi.Count; i++)
                             {
@@ -468,9 +513,11 @@ namespace penjadwalan.controller
                     {
                         if (global_jadwal.GlobalSolusi[i].Solusi[hari].Mengajar[j].Guru == job.Guru)
                         {
-                            if (Math.Abs(global_jadwal.GlobalSolusi[i].Solusi[hari].Mengajar[j].EndMengajar - startMengajar) < job.Sks-2)
+                            if (Math.Abs(global_jadwal.GlobalSolusi[i].Solusi[hari].Mengajar[j].EndMengajar - startMengajar) < job.Sks)
                             {
                                 penalti++;
+                                form.Row = form.Log.NewRow(); form.Row["Status"] = "Intensifikasi Penalti"; form.Row["Keterangan"] = "Global penalti intensifikasi : "+penalti;
+                                form.Log.Rows.Add(form.Row);
                             }
                         }
                     }
@@ -496,6 +543,10 @@ namespace penjadwalan.controller
             limit_jadwal -= job.Sks;
             if(limit_jadwal < 0){
                 penalti ++;
+                int ran = rr.Next(0, jadwal.Solusi[hari].Mengajar.Count);
+                jadwal.Solusi[hari].Mengajar[ran].Problem = true;
+                form.Row = form.Log.NewRow(); form.Row["Status"] = "Intensifikasi Penalti"; form.Row["Keterangan"] = "Lokal Intensifikasi penalti :"+penalti;
+                form.Log.Rows.Add(form.Row);
             }
 
             return penalti;

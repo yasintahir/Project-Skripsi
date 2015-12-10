@@ -19,7 +19,9 @@ namespace penjadwalan
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            var init = new Form1();
+            init.Show();
+            Application.Run();
         }
     }
 }
