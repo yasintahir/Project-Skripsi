@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using System.Windows.Forms;
 
 namespace penjadwalan.controller
 {
@@ -22,8 +23,9 @@ namespace penjadwalan.controller
             return x;
         }
 
-        public List<jadwal> greedy(List<jadwal> x, DataTable y)
+        public List<jadwal> greedy(List<jadwal> x, DataTable y, DataGridView LoadLog, DataTable Log)
         {
+            DataRow Row;
             bool optim = false;
             int hari = 0;
             int temp_sks = 0;
@@ -31,6 +33,7 @@ namespace penjadwalan.controller
             int limit_loop = 0;
             int[] jam_ngajar = new int[6] { 2, 1, 1, 1, 2, 1 };
             int start_ngajar = 0;
+            int problem_count = 0;
             while (!optim)
             {
 
@@ -69,6 +72,7 @@ namespace penjadwalan.controller
                         jam_ngajar[hari] += temp_sks - 1;
                         x[max].Mengajar.Add(new mengajar() { Guru = y.Rows[i].ItemArray[0].ToString(), MataPelajaran = y.Rows[i].ItemArray[1].ToString(), Sks = temp_sks , Problem = true, StartMengajar = start_ngajar , EndMengajar = jam_ngajar[hari]});
                         i++;
+                        problem_count++;
                     }
                 }
                 limit_loop++;
@@ -77,6 +81,9 @@ namespace penjadwalan.controller
                     optim = true;
                 }
             }
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "Lokal Penalti : "+ problem_count;
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
             return x;
         }
     }

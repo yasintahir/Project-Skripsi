@@ -31,7 +31,6 @@ namespace penjadwalan
             InitializeComponent();
             optimasi = new movns(this);
             initUI();
-            init_golobal_solusi();
             Log.Columns.Add(new DataColumn() { ColumnName = "Status" });
             Log.Columns.Add(new DataColumn() { ColumnName = "Keterangan" });
            // MessageBox.Show(GlobalJadwal.GlobalSolusi[10].Solusi.Count().ToString());
@@ -161,6 +160,9 @@ namespace penjadwalan
         }
         private  void init_golobal_solusi()
         {
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "Memulai inisial solusi";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
             //agro
             //12 agro
             GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Agro Bisnis", Kelas = "12 AGRO A", Tingkat = 3, Visit = false }));
@@ -172,16 +174,16 @@ namespace penjadwalan
             GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Agro Bisnis", Kelas = "10 AGRO A", Tingkat = 1, Visit = false }));
             GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Agro Bisnis", Kelas = "10 AGRO B", Tingkat = 1, Visit = false }));
 
-            //pm
-            //12 PM
-            GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "12 PM A", Tingkat = 3, Visit = false }));
-            GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "12 PM B", Tingkat = 3, Visit = false }));
-            //11 PM
-            GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "11 PM A", Tingkat = 2, Visit = false }));
-            GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "11 PM B", Tingkat = 2, Visit = false }));
-            //10 PM
-            GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "10 PM A", Tingkat = 1, Visit = false }));
-            GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "10 PM B", Tingkat = 1, Visit = false }));
+            //////pm
+            ////12 PM
+            //GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "12 PM A", Tingkat = 3, Visit = false }));
+            //GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "12 PM B", Tingkat = 3, Visit = false }));
+            ////11 PM
+            //GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "11 PM A", Tingkat = 2, Visit = false }));
+            //GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "11 PM B", Tingkat = 2, Visit = false }));
+            ////10 PM
+            //GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "10 PM A", Tingkat = 1, Visit = false }));
+            //GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Bisnis Manajemen", Kelas = "10 PM B", Tingkat = 1, Visit = false }));
 
             ////TKJ
             ////12 TKJ
@@ -214,20 +216,66 @@ namespace penjadwalan
             //GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Kimia Industri", Kelas = "10 KI A", Tingkat = 1, Visit = false}));
             //GlobalJadwal.GlobalSolusi.Add(dom_solusi.init_solusi(new solusi() { Jurusan = "Kimia Industri", Kelas = "10 KI B", Tingkat = 1, Visit = false }));
 
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "Dispatch 12 Agro A";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            GlobalJadwal.GlobalSolusi[0].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[0].Solusi, sql.data_mengajar(3, 1, "12 AGRO A", "NEWID()"),LoadLog,Log);
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "selesai Dispatch 12 Agro A";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            Thread.Sleep(500);
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "Dispatch 12 Agro B";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            GlobalJadwal.GlobalSolusi[1].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[1].Solusi, sql.data_mengajar(3, 1, "12 AGRO B", "detail_mtp.sks asc"),LoadLog,Log);
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "selesai Dispatch 12 Agro B";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            Thread.Sleep(500);
 
-            GlobalJadwal.GlobalSolusi[0].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[0].Solusi, sql.data_mengajar(3, 1, "12 AGRO A", "NEWID()"));
-            GlobalJadwal.GlobalSolusi[1].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[1].Solusi, sql.data_mengajar(3, 1, "12 AGRO B", "detail_mtp.sks asc"));
-            GlobalJadwal.GlobalSolusi[2].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[2].Solusi, sql.data_mengajar(2, 1, "11 AGRO A", "guru.nama_guru desc"));
-            GlobalJadwal.GlobalSolusi[3].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[3].Solusi, sql.data_mengajar(2, 1, "11 AGRO B", "mata_pelajaran.mata_pelajaran asc"));
-            GlobalJadwal.GlobalSolusi[4].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[4].Solusi, sql.data_mengajar(1, 1, "10 AGRO A", "NEWID()"));
-            GlobalJadwal.GlobalSolusi[5].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[5].Solusi, sql.data_mengajar(1, 1, "10 AGRO B", "detail_mtp.sks asc"));
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "Dispatch 11 Agro A";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            GlobalJadwal.GlobalSolusi[2].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[2].Solusi, sql.data_mengajar(2, 1, "11 AGRO A", "guru.nama_guru desc"),LoadLog,Log);
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "selesai Dispatch 1a Agro A";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            Thread.Sleep(500);
 
-            GlobalJadwal.GlobalSolusi[6].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[6].Solusi, sql.data_mengajar(3, 3, "12 PM A", "guru.nama_guru desc"));
-            GlobalJadwal.GlobalSolusi[7].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[7].Solusi, sql.data_mengajar(3, 3, "12 PM B", "mata_pelajaran.mata_pelajaran asc"));
-            GlobalJadwal.GlobalSolusi[8].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[8].Solusi, sql.data_mengajar(2, 3, "11 PM A", "detail_mtp.sks desc"));
-            GlobalJadwal.GlobalSolusi[9].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[9].Solusi, sql.data_mengajar(2, 3, "11 PM B", "NEWID()"));
-            GlobalJadwal.GlobalSolusi[10].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[10].Solusi, sql.data_mengajar(1, 3, "10 PM A", "guru.nama_guru desc"));
-            GlobalJadwal.GlobalSolusi[11].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[11].Solusi, sql.data_mengajar(1, 3, "10 PM B", "mata_pelajaran.mata_pelajaran asc"));
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "Dispatch 11 Agro B";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            GlobalJadwal.GlobalSolusi[3].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[3].Solusi, sql.data_mengajar(2, 1, "11 AGRO B", "mata_pelajaran.mata_pelajaran asc"),LoadLog,Log);
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "selesai Dispatch 1a Agro A";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            Thread.Sleep(500);
+
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "Dispatch 10 Agro A";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            GlobalJadwal.GlobalSolusi[4].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[4].Solusi, sql.data_mengajar(1, 1, "10 AGRO A", "NEWID()"),LoadLog,Log);
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "selesai Dispatch 10 Agro A";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            Thread.Sleep(500);
+
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "Dispatch 10 Agro B";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            GlobalJadwal.GlobalSolusi[5].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[5].Solusi, sql.data_mengajar(1, 1, "10 AGRO B", "detail_mtp.sks asc"),LoadLog,Log);
+            Row = Log.NewRow(); Row["Status"] = "Simple Dispatch"; Row["Keterangan"] = "selesai Dispatch 10 Agro B";
+            Log.Rows.Add(Row);
+            LoadLog.Invoke((MethodInvoker)(() => LoadLog.DataSource = Log));
+            Thread.Sleep(500);
+
+
+            //GlobalJadwal.GlobalSolusi[6].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[6].Solusi, sql.data_mengajar(3, 3, "12 PM A", "guru.nama_guru desc"));
+            //GlobalJadwal.GlobalSolusi[7].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[7].Solusi, sql.data_mengajar(3, 3, "12 PM B", "mata_pelajaran.mata_pelajaran asc"));
+            //GlobalJadwal.GlobalSolusi[8].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[8].Solusi, sql.data_mengajar(2, 3, "11 PM A", "detail_mtp.sks desc"));
+            //GlobalJadwal.GlobalSolusi[9].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[9].Solusi, sql.data_mengajar(2, 3, "11 PM B", "NEWID()"));
+            //GlobalJadwal.GlobalSolusi[10].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[10].Solusi, sql.data_mengajar(1, 3, "10 PM A", "guru.nama_guru desc"));
+            //GlobalJadwal.GlobalSolusi[11].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[11].Solusi, sql.data_mengajar(1, 3, "10 PM B", "mata_pelajaran.mata_pelajaran asc"));
 
             //GlobalJadwal.GlobalSolusi[12].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[12].Solusi, sql.data_mengajar(3, 5, "12 TKJ A", "detail_mtp.sks desc"));
             //GlobalJadwal.GlobalSolusi[13].Solusi = dom_solusi.greedy(GlobalJadwal.GlobalSolusi[13].Solusi, sql.data_mengajar(3, 5, "12 TKJ B", "detail_mtp.sks asc"));
@@ -270,6 +318,8 @@ namespace penjadwalan
         }
         private void ProsesBtn_Click(object sender, EventArgs e)
         {
+
+            init_golobal_solusi();
             runAlgo();
         }
 

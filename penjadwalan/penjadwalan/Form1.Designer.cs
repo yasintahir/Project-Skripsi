@@ -35,6 +35,8 @@
             this.ProsesBtn = new System.Windows.Forms.Button();
             this.ErrorLbl = new System.Windows.Forms.Label();
             this.GlobalErrorLbl = new System.Windows.Forms.Label();
+            this.LoadLog = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadLog)).BeginInit();
             this.SuspendLayout();
             // 
             // Header
@@ -112,10 +114,20 @@
             this.GlobalErrorLbl.Size = new System.Drawing.Size(0, 13);
             this.GlobalErrorLbl.TabIndex = 6;
             // 
+            // LoadLog
+            // 
+            this.LoadLog.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
+            this.LoadLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.LoadLog.Location = new System.Drawing.Point(12, 346);
+            this.LoadLog.Name = "LoadLog";
+            this.LoadLog.Size = new System.Drawing.Size(484, 192);
+            this.LoadLog.TabIndex = 7;
+            // 
             // Form1
             // 
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(508, 633);
+            this.Controls.Add(this.LoadLog);
             this.Controls.Add(this.GlobalErrorLbl);
             this.Controls.Add(this.ErrorLbl);
             this.Controls.Add(this.ProsesBtn);
@@ -130,6 +142,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            ((System.ComponentModel.ISupportInitialize)(this.LoadLog)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -146,6 +159,7 @@
         private System.Windows.Forms.Button ProsesBtn;
         public System.Windows.Forms.Label ErrorLbl;
         public System.Windows.Forms.Label GlobalErrorLbl;
+        private System.Windows.Forms.DataGridView LoadLog;
 
 
 
